@@ -20,8 +20,8 @@ public class Particulier extends Cursist {
 
     @Override
     public void showInfo() {
-        System.out.println("id: " + id);
         System.out.println("Particulier: " + naam);
-        System.out.println(adres + " " + woonplaats);
+        System.out.println("adres: " + adres + ", " + woonplaats);
+        System.out.println();
     }
 }

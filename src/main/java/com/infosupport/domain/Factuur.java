@@ -1,39 +1,33 @@
 package com.infosupport.domain;
 
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Created by Raymond Phua on 10-10-2016.
+ * Created by Raymond Phua on 11-10-2016.
  */
+@Data
 public class Factuur {
 
-    private int id;
-    private List<Cursus> cursusList;
-    private List<Cursist> cursistList;
+    private List<Inschrijving> inschrijvingen;
 
     public Factuur() {
-        cursusList = new ArrayList<>();
-        cursistList = new ArrayList<>();
+        inschrijvingen = new ArrayList<>();
     }
 
-    public List<Cursist> getCursisten() {
-        return cursistList;
+    public void printInfoOfWeek(int weekNr) {
+        inschrijvingen.stream().forEach(i -> i.lesInWeek(weekNr));
     }
 
-    public List<Cursus> getCursussen() {
-        return cursusList;
+    public void printInfoOfCursist(Cursist cursist) {
+        System.out.println("Alle inschrijvingen voor: " + cursist.getNaam());
+        inschrijvingen.stream().forEach(i -> i.cursistInInschrijving(cursist));
     }
 
-    public void printInfo() {
-        cursusList.stream().forEach(c -> {
-            System.out.println(c.getTitel());
-            c.getCursists().stream().forEach(cursist -> {
-                if (cursist instanceof Particulier) {
-                    System.out.println("Particulier: " + cursist.getNaam());
-                    System.out.println("Factuur adres: " + cursist.getAdres() + " " + cursist.woonplaats);
-                }
-            });
-        });
+    public void addInschrijving(Inschrijving inschrijving) {
+        inschrijvingen.add(inschrijving);
     }
 }

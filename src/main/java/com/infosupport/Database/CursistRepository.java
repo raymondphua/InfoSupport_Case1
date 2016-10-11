@@ -4,9 +4,9 @@ import com.infosupport.domain.Bedrijf;
 import com.infosupport.domain.Cursist;
 import com.infosupport.domain.Particulier;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,12 +22,13 @@ public class CursistRepository extends Database {
         List<Bedrijf> bedrijven = new ArrayList<>();
         try {
             List<Cursist> allCursisten = new ArrayList<>();
-            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
             String query = "SELECT * FROM CURSISTS";
 
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+
             System.out.println("\n Executing query: " + query);
-            ResultSet rset = stmt.executeQuery(query);
+            ResultSet rset = preparedStatement.executeQuery();
 
             while(rset.next()) {
                 allCursisten.add(mapToCursist(rset));
@@ -36,8 +37,6 @@ public class CursistRepository extends Database {
             List<Cursist> fixedRelationsCursists = fixRelations(allCursisten);
 
             bedrijven = (List<Bedrijf>)(List<?>) fixedRelationsCursists;
-            stmt.close();
-            //return products;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -49,25 +48,35 @@ public class CursistRepository extends Database {
         getConnection();
 
         try {
-            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-
             int offerte = parseBoolToInt(cursist.isOfferte());
             String query = "";
+            PreparedStatement preparedStatement;
 
             if (cursist.getParentId() == 0) {
                 query = "INSERT INTO CURSISTS (NAAM, ADRES, WOONPLAATS, OFFERTE) " +
-                        "VALUES ('" + cursist.getNaam() + "', '" + cursist.getAdres() + "', '" + cursist.getWoonplaats() + "'" +
-                        ", '" + offerte + "')";
+                        "VALUES (?, ?, ?, ?)";
+
+                preparedStatement = conn.prepareStatement(query);
+                preparedStatement.setString(1, cursist.getNaam());
+                preparedStatement.setString(2, cursist.getAdres());
+                preparedStatement.setString(3, cursist.getWoonplaats());
+                preparedStatement.setInt(4, offerte);
+
+                System.out.println("\n Executing query: " + query);
+                preparedStatement.executeQuery();
             } else {
                 query = "INSERT INTO CURSISTS (NAAM, ADRES, WOONPLAATS, PARENT, OFFERTE) " +
-                        "VALUES ('" + cursist.getNaam() + "', '" + cursist.getAdres() + "', '" + cursist.getWoonplaats() + "'" +
-                        ", '" + cursist.getParentId() + "', '" + offerte + "')";
+                        "VALUES (?, ?, ?, ?, ?)";
+
+                preparedStatement = conn.prepareStatement(query);
+                preparedStatement.setString(1, cursist.getNaam());
+                preparedStatement.setString(2, cursist.getAdres());
+                preparedStatement.setString(3, cursist.getWoonplaats());
+                preparedStatement.setInt(4, cursist.getParentId());
+                preparedStatement.setInt(5, offerte);
+                System.out.println("\n Executing query: " + query);
+
             }
-
-            System.out.println("\n Executing query: " + query);
-            ResultSet rset = stmt.executeQuery(query);
-
-            //return products;
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

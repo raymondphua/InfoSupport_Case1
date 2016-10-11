@@ -17,6 +17,7 @@ public class Bedrijf extends Cursist {
 
     public Bedrijf(int id, int parentId) {
         this.id = id;
+        this.naam = "Offerte " + id;
         this.offerte = true;
         this.parentId = parentId;
         cursists = new ArrayList<>();
@@ -34,10 +35,14 @@ public class Bedrijf extends Cursist {
 
     @Override
     public void showInfo() {
-        System.out.println("id: " + id);
-        System.out.println("Bedrijf: " + naam);
-        System.out.println(adres + " " + woonplaats);
-
+        System.out.println(naam);
+        if (!isOfferte()) {
+            System.out.println(adres + " " + woonplaats);
+        } else {
+            System.out.println("Aantal particulieren: " + cursists.size());
+        }
+        System.out.println();
+        cursists.stream().forEach(c -> c.showInfo());
     }
 
     public void addCursist(Cursist cursist) {
