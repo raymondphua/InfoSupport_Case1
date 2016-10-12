@@ -22,8 +22,13 @@ public class Inschrijving {
         cursusCursisten = new HashMap<>();
     }
 
+    public Inschrijving(int id) {
+        this.id = id;
+        cursusCursisten = new HashMap<>();
+    }
+
     public void addCursus(Cursus cursus, LocalDate startDatum) {
-        if (!cursusCursisten.containsKey(cursus)) {
+        if (!cursusExists(cursus)) {
             cursusCursisten.put(cursus, new ArrayList<>());
             this.startDatum = startDatum;
         }
@@ -31,6 +36,10 @@ public class Inschrijving {
 
     public void addCursisten(Cursus cursus, Cursist cursist) {
         cursusCursisten.get(cursus).add(cursist);
+    }
+
+    public boolean cursusExists(Cursus cursus) {
+        return cursusCursisten.containsKey(cursus);
     }
 
     public void printInfo() {
@@ -64,9 +73,9 @@ public class Inschrijving {
     }
 
     public boolean isInWeek(int week) {
-        TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        TemporalField woy = WeekFields.of(Locale.GERMANY).weekOfWeekBasedYear();
 
-        return (startDatum.get(woy) - 1) == week;
+        return (startDatum.get(woy)) == week;
     }
 
     public void cursistInInschrijving(Cursist cursist) {

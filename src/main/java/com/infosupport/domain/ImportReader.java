@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Raymond Phua on 11-10-2016.
@@ -14,11 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 public class ImportReader {
 
-    public List<Cursus> importCursus(String file) throws ImportException {
+    public Map<Cursus, List<LocalDate>> importCursus(String file) throws ImportException {
+        Map<Cursus, List<LocalDate>> cursusDates = new HashMap<>();
 
-        List<Cursus> cursusList = new ArrayList<>();
-
-        String[] splitForEachCursus = file.split("\n\n");
+        String cleanFile = file.replace("\r", "");
+        String[] splitForEachCursus = cleanFile.split("\n\n");
 
         for (String singleCursus : splitForEachCursus) {
             String[] splitByNewLines = singleCursus.split("\n");
@@ -54,14 +56,15 @@ public class ImportReader {
             }
 
             Cursus cursus = new Cursus(code, titel, duur);
-            cursus.addStartDatumToCursus(date);
 
-            if (!cursusList.stream().anyMatch(c -> c.equals(cursus))) {
-                cursusList.add(cursus);
+            if (!cursusDates.containsKey(cursus)) {
+                cursusDates.put(cursus, new ArrayList<>());
             }
+
+            cursusDates.get(cursus).add(date);
         }
 
-        return cursusList;
+        return cursusDates;
     }
 
     private boolean correctFormat(String[] cursus) {

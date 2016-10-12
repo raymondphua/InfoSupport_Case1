@@ -10,10 +10,11 @@ import java.sql.SQLException;
 public class Database {
 
     protected static Connection conn;
-
     private static String jdbcURL = "jdbc:oracle:thin:@localhost:1521/XE";
     private static String user = "phua";
     private static String password = "admin";
+
+    protected Mapper mapper = new Mapper();
 
     protected static void getConnection() {
         try {

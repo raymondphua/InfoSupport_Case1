@@ -11,7 +11,9 @@ import org.junit.rules.ExpectedException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -41,7 +43,7 @@ public class ImportReaderTest {
         thrown.expect(ImportException.class);
         thrown.expectMessage("Incorrect format");
         thrown.expectCause(is(IncorrectFormatException.class));
-        List<Cursus> cursus = reader.importCursus(file);
+        reader.importCursus(file);
     }
 
     @Test
@@ -49,9 +51,9 @@ public class ImportReaderTest {
 
         String file = getFile();
 
-        List<Cursus> cursus = reader.importCursus(file);
+        Map<Cursus, List<LocalDate>> cursus = reader.importCursus(file);
 
-        assertThat(cursus.get(0), is(not(nullValue())));
+        assertThat(cursus.size(), is(not(0)));
     }
 
     @Test
@@ -61,7 +63,7 @@ public class ImportReaderTest {
         thrown.expect(ImportException.class);
         thrown.expectMessage("Incorrect format");
         thrown.expectCause(is(IncorrectFormatException.class));
-        List<Cursus> cursus = reader.importCursus(file);
+        reader.importCursus(file);
     }
 
     @Test
@@ -71,7 +73,7 @@ public class ImportReaderTest {
         thrown.expect(ImportException.class);
         thrown.expectMessage("Incorrect format");
         thrown.expectCause(is(IncorrectFormatException.class));
-        List<Cursus> cursus = reader.importCursus(file);
+        reader.importCursus(file);
     }
 
     @Test
@@ -81,7 +83,7 @@ public class ImportReaderTest {
         thrown.expect(ImportException.class);
         thrown.expectMessage("Incorrect format");
         thrown.expectCause(is(IncorrectFormatException.class));
-        List<Cursus> cursus = reader.importCursus(file);
+        reader.importCursus(file);
     }
 
     @Test
@@ -89,12 +91,13 @@ public class ImportReaderTest {
 
         String file = getFile();
 
-        List<Cursus> cursus = reader.importCursus(file);
+        Map<Cursus, List<LocalDate>> cursus = reader.importCursus(file);
 
         Cursus expectedCursus = new Cursus("CNETIN", "C# Programmeren", 5);
-        expectedCursus.addStartDatumToCursus(LocalDate.of(2013, 10, 14));
-
-        assertThat(cursus.get(0), is(expectedCursus));
+        Map<Cursus, List<LocalDate>> expected = new HashMap<>();
+        expected.put(expectedCursus, new ArrayList<>());
+        expected.get(expectedCursus).add(LocalDate.of(2013, 10, 14));
+        assertThat(cursus.get(expectedCursus), is(expected.get(expectedCursus)));
     }
 
     @Test
@@ -102,17 +105,16 @@ public class ImportReaderTest {
 
         String file = getMultipleCursussen();
 
-        List<Cursus> cursus = reader.importCursus(file);
+        Map<Cursus, List<LocalDate>> cursus = reader.importCursus(file);
 
-        List<Cursus> expected = new ArrayList<>();
+        Map<Cursus, List<LocalDate>> expected = new HashMap<>();
         Cursus a = new Cursus("CNETIN", "C# Programmeren", 5);
-        a.addStartDatumToCursus(LocalDate.of(2013, 10, 14));
+        expected.put(a, new ArrayList<>());
+        expected.get(a).add(LocalDate.of(2013, 10, 14));
 
         Cursus b = new Cursus("ADCSB", "Advanced C#", 2);
-        b.addStartDatumToCursus(LocalDate.of(2013, 10, 21));
-
-        expected.add(a);
-        expected.add(b);
+        expected.put(b, new ArrayList<>());
+        expected.get(b).add(LocalDate.of(2013, 10, 21));
 
         assertThat(cursus, is(expected));
     }
@@ -122,7 +124,7 @@ public class ImportReaderTest {
 
         String file = getDuplicate();
 
-        List<Cursus> cursus = reader.importCursus(file);
+        Map<Cursus, List<LocalDate>> cursus = reader.importCursus(file);
 
         assertThat(cursus.size(), is(1));
     }

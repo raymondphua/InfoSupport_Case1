@@ -16,7 +16,7 @@ public class Cursus {
     private String code;
     private String titel;
     private int duurtijd;
-    private List<LocalDate> startDatums;
+//    private List<LocalDate> startDatums;
 
     //TODO: hashmap<weekNr, List<cursist>> of hashmap<Week, List<Cursist>> week = weeknr + datum
 
@@ -24,14 +24,14 @@ public class Cursus {
         this.code = code;
         this.titel = titel;
         this.duurtijd = duurtijd;
-        startDatums = new ArrayList<>();
+//        startDatums = new ArrayList<>();
     }
 
-    public void addStartDatumToCursus(LocalDate startDatum) {
-        //check if startdatum exists
-        LocalDate found = startDatums.stream().filter(date -> date.equals(startDatum)).findFirst().orElse(null);
-        if (found == null) {
-            startDatums.add(startDatum);
-        }
-    }
+//    public void addStartDatumToCursus(LocalDate startDatum) {
+//        //check if startdatum exists
+//        LocalDate found = startDatums.stream().filter(date -> date.equals(startDatum)).findFirst().orElse(null);
+//        if (found == null) {
+//            startDatums.add(startDatum);
+//        }
+//    }
 }

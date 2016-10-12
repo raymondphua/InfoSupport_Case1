@@ -27,12 +27,12 @@ public class CursusTest {
         cursus = new Cursus("testcode", "Java8", 4);
     }
 
-    @Test
-    public void add_Start_Datum_To_Cursus() {
-        cursus.addStartDatumToCursus(LocalDate.of(2016, 11, 01));
-
-        LocalDate localDate = cursus.getStartDatums().get(0);
-
-        assertThat(localDate, is(LocalDate.of(2016, 11, 01)));
-    }
+//    @Test
+//    public void add_Start_Datum_To_Cursus() {
+//        cursus.addStartDatumToCursus(LocalDate.of(2016, 11, 01));
+//
+//        LocalDate localDate = cursus.getStartDatums().get(0);
+//
+//        assertThat(localDate, is(LocalDate.of(2016, 11, 01)));
+//    }
 }

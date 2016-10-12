@@ -12,9 +12,15 @@ import java.util.stream.Collectors;
 @Data
 public class Factuur {
 
+    private int id;
     private List<Inschrijving> inschrijvingen;
 
     public Factuur() {
+        inschrijvingen = new ArrayList<>();
+    }
+
+    public Factuur(int id) {
+        this.id = id;
         inschrijvingen = new ArrayList<>();
     }
 
